@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý sản phẩm</title>
+    <link rel="stylesheet" href="./styles/styles.css" />
+  </head>
+
+  <body>
+    <!-- Modal  -->
+    <div class="addModal" id="addModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close" onclick="closeModal()">&times;</span>
+          <h3 id="labelAddItem">Thêm sản phẩm</h3>
+        </div>
+        <div class="modal-body">
+          <form action="" id="inputData">
+            <input id="maSanPham" type="text" placeholder="Mã sản phẩm" />
+            <input id="tenSanPham" type="text" placeholder="Tên sản phẩm" />
+            <input id="donGia" type="text" placeholder="Đơn giá" />
+            <input id="ghiChu" type="text" placeholder="Ghi chú" />
+          </form>
+          <form action="" id="formButton">
+            <button id="confirm" type="button" onclick="confirmItem()">Xác nhận</button>
+            <button id="clear" type="button" onclick="clearItem()">Thử lại</button>
+            <button id="save" type="button" onclick="saveItem()">Lưu</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Display list SP -->
+    <table id="table">
+  
+    </table>
+
+    <script src="./js/sripts.js"></script>
+  </body>
+</html>
