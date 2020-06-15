@@ -102,13 +102,13 @@ th, td {
   border: 1px solid #888;
   width: 50%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  -webkit-animation-name: animatetop;
+  -webkit-animation-name: animateTop;
   -webkit-animation-duration: 0.4s;
-  animation-name: animatetop;
+  animation-name: animateTop;
   animation-duration: 0.4s;
 }
 
-@-webkit-keyframes animatetop {
+@-webkit-keyframes animateTop {
   from {
     top: -300px;
     opacity: 0;
@@ -119,7 +119,7 @@ th, td {
   }
 }
 
-@keyframes animatetop {
+@keyframes animateTop {
   from {
     top: -300px;
     opacity: 0;
@@ -149,7 +149,11 @@ th, td {
   background-color: #5cb85c;
   color: white;
 }
+.close{
+  position: absolute;
+  right: 1%;
 
+}
 .modal-body {
   padding: 20px 16px;
 }
