@@ -1,6 +1,7 @@
-var modal, idMaSanPham, idTenSanPham, idDonGia, idGhiChu, tableContent, btnConfirm, btnSave, btnClear;
-var listSanPham = new Array();
-
+var modal, idMaSanPham, idTenSanPham, idDonGia, idGhiChu, btnConfirm, btnSave, btnClear;
+var table, tableHeader, tableContent = "";
+var listItems = new Array();
+var status = "new";
 init();
 
 function init() {
@@ -12,12 +13,30 @@ function init() {
     btnConfirm = document.getElementById("confirm");
     btnSave = document.getElementById("save");
     btnClear = document.getElementById("clear");
-
+    if (localStorage.getItem("listItems") != null) {
+        listItems = JSON.parse(localStorage.getItem("listItems"));
+    }
     initTable();
+    updateTableDisplay();
 }
 
-function initTable() {
-    tableContent = `<tr>
+function addHtml(item, index) {
+    let content = `<tr>
+            <td>${item.maSanPham}</td>
+            <td>${item.tenSanPham}</td>
+            <td>${item.donGia}</td>
+            <td>${item.ghiChu}</td>
+            <td>
+                <a href='#' onclick="editItem(${index})">Sửa</a> | <a href='#' onclick="deleteItem(${index})">Xoá</a>  
+            </td>
+          </tr>`
+    return content;
+}
+function addStringTable(string) {
+    table += string;
+}
+function initTableHeader() {
+    table = `<tr>
                         <caption id="caption">
                         Quản lý sản phẩm
                         </caption>
@@ -25,8 +44,8 @@ function initTable() {
                         <button class="buttonAddItem" type="button" onclick="addItem()">
                             Thêm sản phẩm
                         </button>
-                        <input type="text" id="search" placeholder="Tìm tên sản phẩm" />
-                        <button type="button" onclick="search()">Tìm kiếm</button>
+                        <input type="text" id="searchName" placeholder="Tìm tên sản phẩm" />
+                        <button type="button" id="searchButton" onclick="searchItems()">Tìm kiếm</button>
                         </th>
                     </tr>
                     <tr id="label">
@@ -36,26 +55,27 @@ function initTable() {
                         <td>Ghi chú</td>
                         <td>Action</td>
                     </tr>`
+}
 
-    if (localStorage.getItem("listSanPham") != null) {
-        listSanPham = JSON.parse(localStorage.getItem("listSanPham"));
-        listSanPham.forEach((sanpham, index) => {
-            tableContent += `<tr>
-            <td>${sanpham.maSanPham}</td>
-            <td>${sanpham.tenSanPham}</td>
-            <td>${sanpham.donGia}</td>
-            <td>${sanpham.ghiChu}</td>
-            <td>
-                <a href='#' onclick="editItem(${index})">Sửa</a> | <a href='#' onclick="deleteItem(${index})">Xoá</a>  
-            </td>
-          </tr>`
-        });
-        updateTable();
+function initTableContent(tableArray) {
+    if (tableArray.length == 0) {
+        tableContent += `<tr><p>Không có sản phẩm</p></tr>`
+    }
+    else {
+        for (let i = 0; i < tableArray.length; i++) {
+            tableContent += addHtml(tableArray[i], i);
+        }
     }
 }
 
-function updateTable() {
-    document.getElementById("table").innerHTML = tableContent;
+function initTable() {
+    initTableHeader();
+    initTableContent(listItems);
+    addStringTable(tableContent);
+}
+
+function updateTableDisplay() {
+    document.getElementById("table").innerHTML = table;
 }
 
 function editLabel(string) {
@@ -65,6 +85,7 @@ function editLabel(string) {
 function addItem() {
     showModal();
     editLabel("Thêm sản phẩm");
+    idMaSanPham.readOnly = false;
     btnSave.style.display = "none";
     btnClear.style.display = "block";
     btnConfirm.style.display = "block";
@@ -76,15 +97,15 @@ function editItem(index) {
     btnClear.style.display = "none";
     btnConfirm.style.display = "none";
     editLabel("Sửa sản phẩm");
-    let editedItem = listSanPham[index];
+    let editedItem = listItems[index];
     idMaSanPham.value = editedItem.maSanPham;
-    idMaSanPham.readOnly = "true";
+    idMaSanPham.readOnly = true;
     idTenSanPham.value = editedItem.tenSanPham;
     idDonGia.value = editedItem.donGia;
     idGhiChu.value = editedItem.ghiChu;
 }
 
-function confirmItem() {
+function confirmAdd() {
     let sanpham = getValue();
     let flag = 0;
     if (sanpham.maSanPham == 0 || sanpham.tenSanPham == 0 || sanpham.donGia == 0 || sanpham.ghiChu == 0) {
@@ -100,7 +121,7 @@ function confirmItem() {
             ghiChu: sanpham.ghiChu
         }
         let flag2 = 0;
-        listSanPham.forEach(sp => {
+        listItems.forEach(sp => {
             if (newSanPham.maSanPham == sp.maSanPham) {
                 flag2++;
                 return;
@@ -111,43 +132,72 @@ function confirmItem() {
             return;
         }
 
-        listSanPham.push(newSanPham);
+        listItems.push(newSanPham);
         saveStorage();
 
-        tableContent += `<tr>
+        let newItemHtml = `<tr>
             <td>${newSanPham.maSanPham}</td>
             <td>${newSanPham.tenSanPham}</td>
             <td>${newSanPham.donGia}</td>
             <td>${newSanPham.ghiChu}</td>
             <td>
-                <a href='#' onclick="editItem(${listSanPham.length - 1})">Sửa</a> | <a href='#' onclick="deleteItem(${listSanPham.length - 1})">Xoá</a>  
+                <a href='#' onclick="editItem(${listItems.length - 1})">Sửa</a> | <a href='#' onclick="deleteItem(${listItems.length - 1})">Xoá</a>  
             </td>
           </tr>`
-
-        updateTable();
+        tableContent += newItemHtml;
+        table += newItemHtml;
+        updateTableDisplay();
         closeModal();
     }
 }
 
-function saveItem() {
+function saveEdit() {
     newItem = getValue();
-    let index
-    listSanPham.forEach((sp, i) => {
+    let index;
+    listItems.forEach((sp, i) => {
         if (sp.maSanPham == newItem.maSanPham) {
             index = i;
             return;
         }
     });
-    listSanPham[index] = newItem;
+    listItems[index] = newItem;
     saveStorage();
-    initTable();
+    updateDataTable(listItems);
     closeModal();
+}
+function updateDataTable(newArrayList) {
+    table = table.replace(tableContent, "");
+    tableContent = "";
+    initTableContent(newArrayList);
+    addStringTable(tableContent);
+    updateTableDisplay();
 }
 
 function deleteItem(index) {
-    listSanPham.splice(index, 1);
+    listItems.splice(index, 1);
     saveStorage();
-    initTable();
+    updateDataTable(listItems);
+}
+
+function searchItems() {
+    let txtSearch = document.getElementById("searchName");
+    var listItemsFiltered = new Array();
+    let name = txtSearch.value;
+    if (name.length == 0) {
+        updateDataTable(listItems);
+        return;
+    }
+    listItems.forEach((sp, index) => {
+        if (sp.tenSanPham.toLowerCase().search(name) != -1) {
+            listItemsFiltered.push(listItems[index]);
+        }
+    });
+    updateDataTable(listItemsFiltered);
+    document.getElementById("searchName").value = name;
+    // txtSearch.value = name;
+    console.log(txtSearch.value);
+    
+
 }
 
 function getValue() {
@@ -162,7 +212,7 @@ function getValue() {
 }
 
 function saveStorage() {
-    localStorage.setItem("listSanPham", JSON.stringify(listSanPham));
+    localStorage.setItem("listItems", JSON.stringify(listItems));
 }
 
 function clearItem() {
@@ -170,10 +220,6 @@ function clearItem() {
     idTenSanPham.value = "";
     idDonGia.value = "";
     idGhiChu.value = "";
-}
-
-function search() {
-    alert(JSON.stringify(listSanPham))
 }
 
 function closeModal() {

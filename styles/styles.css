@@ -1,5 +1,6 @@
 body {
   margin: auto;
+  font-size: 20px;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -15,6 +16,7 @@ caption {
 
 #searchBar > button, input {
   padding: 5px;
+  font-size: 20px;
 }
 #searchBar > input {
   width: 45%;
@@ -24,7 +26,7 @@ caption {
 #table {
   width: 80%;
   height: 100%;
-  background-color: hsl(60, 3%, 93%);
+  background-color: hsl(0, 0%, 100%);
 }
 
 table, th, td {
@@ -37,7 +39,7 @@ th, td {
   padding: 1%;
 }
 #label {
-  background-color: rgb(48, 47, 47);
+  background-color: rgb(133, 133, 133);
 }
 #label > td {
   font-weight: bold;
@@ -64,6 +66,7 @@ th, td {
 #formButton> button {
   padding: 10px;
   flex-basis: 200px;
+  font-size: 20px;
 }
 
 #addModal {
