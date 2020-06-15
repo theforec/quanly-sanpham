@@ -23,18 +23,36 @@
             <input id="ghiChu" type="text" placeholder="Ghi chú" />
           </form>
           <form action="" id="formButton">
-            <button id="confirm" type="button" onclick="confirmAdd()">Xác nhận</button>
+            <button id="confirm" type="button" onclick="confirmAdd()">
+              Xác nhận
+            </button>
             <button id="save" type="button" onclick="saveEdit()">Lưu</button>
-            <button id="clear" type="button" onclick="clearItem()">Thử lại</button>
+            <button id="clear" type="button" onclick="clearItem()">
+              Thử lại
+            </button>
           </form>
         </div>
       </div>
     </div>
 
     <!-- Display list SP -->
-    <table id="table">
-  
+    <table>
+      <tr>
+        <caption id="caption">
+          Quản lý sản phẩm
+        </caption>
+        <th colspan="5" id="searchBar">
+          <button class="buttonAddItem" type="button" onclick="addItem()">
+            Thêm sản phẩm
+          </button>
+          <input type="text" id="searchName" placeholder="Tìm tên sản phẩm" />
+          <button type="button" id="searchButton" onclick="searchItems()">
+            Tìm kiếm
+          </button>
+        </th>
+      </tr>
     </table>
+    <table id="table"></table>
 
     <script src="./js/sripts.js"></script>
   </body>

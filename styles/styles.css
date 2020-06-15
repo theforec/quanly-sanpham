@@ -1,7 +1,8 @@
 body {
-  margin: auto;
+  margin: 0 auto;
   font-size: 20px;
   font-family: Arial, Helvetica, sans-serif;
+  padding-left: 15%;
 }
 
 caption {
@@ -23,7 +24,7 @@ caption {
   margin-left: 20%;
 }
 
-#table {
+table {
   width: 80%;
   height: 100%;
   background-color: hsl(0, 0%, 100%);
@@ -33,11 +34,21 @@ table, th, td {
   border-collapse: collapse;
   border: 1px solid black;
 }
-
-th, td {
+#label > td {
   text-align: center;
   padding: 1%;
 }
+th, td {
+  text-align: left;
+  padding: 1%;
+}
+.donGia {
+  padding: 1%;
+}
+.action {
+  text-align: center;
+}
+
 #label {
   background-color: rgb(133, 133, 133);
 }
@@ -121,7 +132,6 @@ th, td {
 
 .close {
   color: white;
-  float: right;
   font-size: 28px;
   font-weight: bold;
 }

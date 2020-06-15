@@ -24,9 +24,9 @@ function addHtml(item, index) {
     let content = `<tr>
             <td>${item.maSanPham}</td>
             <td>${item.tenSanPham}</td>
-            <td>${item.donGia}</td>
             <td>${item.ghiChu}</td>
-            <td>
+            <td class="donGia">${item.donGia}</td>
+            <td class="action">
                 <a href='#' onclick="editItem(${index})">Sửa</a> | <a href='#' onclick="deleteItem(${index})">Xoá</a>  
             </td>
           </tr>`
@@ -36,25 +36,13 @@ function addStringTable(string) {
     table += string;
 }
 function initTableHeader() {
-    table = `<tr>
-                        <caption id="caption">
-                        Quản lý sản phẩm
-                        </caption>
-                        <th colspan="5" id="searchBar">
-                        <button class="buttonAddItem" type="button" onclick="addItem()">
-                            Thêm sản phẩm
-                        </button>
-                        <input type="text" id="searchName" placeholder="Tìm tên sản phẩm" />
-                        <button type="button" id="searchButton" onclick="searchItems()">Tìm kiếm</button>
-                        </th>
-                    </tr>
-                    <tr id="label">
-                        <td>Mã sản phẩm</td>
-                        <td>Tên sản phẩm</td>
-                        <td>Đơn giá</td>
-                        <td>Ghi chú</td>
-                        <td>Action</td>
-                    </tr>`
+    table = `<tr id="label">
+                <td>Mã sản phẩm</td>
+                <td>Tên sản phẩm</td>
+                <td>Ghi chú</td>
+                <td>Đơn giá</td>
+                <td>Action</td>
+            </tr>`
 }
 
 function initTableContent(tableArray) {
@@ -151,6 +139,14 @@ function confirmAdd() {
     }
 }
 
+function updateDataTable(newArrayList) {
+    table = table.replace(tableContent, "");
+    tableContent = "";
+    initTableContent(newArrayList);
+    addStringTable(tableContent);
+    updateTableDisplay();
+}
+
 function saveEdit() {
     newItem = getValue();
     let index;
@@ -164,13 +160,6 @@ function saveEdit() {
     saveStorage();
     updateDataTable(listItems);
     closeModal();
-}
-function updateDataTable(newArrayList) {
-    table = table.replace(tableContent, "");
-    tableContent = "";
-    initTableContent(newArrayList);
-    addStringTable(tableContent);
-    updateTableDisplay();
 }
 
 function deleteItem(index) {
@@ -192,12 +181,11 @@ function searchItems() {
             listItemsFiltered.push(listItems[index]);
         }
     });
-    updateDataTable(listItemsFiltered);
-    document.getElementById("searchName").value = name;
-    // txtSearch.value = name;
-    console.log(txtSearch.value);
-    
+    txtSearch.value = name;
 
+    updateDataTable(listItemsFiltered);
+    // document.getElementById("searchName").value = name;
+    console.log(txtSearch.value);
 }
 
 function getValue() {
