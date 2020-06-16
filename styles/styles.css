@@ -51,6 +51,10 @@ th, td {
   text-align: center;
 }
 
+.empty {
+  text-align: center;
+}
+
 #label {
   background-color: rgb(133, 133, 133);
 }

@@ -51,7 +51,7 @@ function initTableHeader() {
 
 function initTableContent(tableArray) {
     if (tableArray.length == 0) {
-        tableContent += `<tr><p>Không có sản phẩm</p></tr>`
+        tableContent += `<tr><th colspan="5" class="empty">Không có sản phẩm</th></tr>`
     }
     else {
         for (let i = 0; i < tableArray.length; i++) {
