@@ -1,10 +1,14 @@
 var modal, idMaSanPham, idTenSanPham, idDonGia, idGhiChu, btnConfirm, btnSave, btnClear;
-var table, tableHeader, tableContent = "";
-var listItems = new Array();
-var status = "new";
+var table, tableHeader, tableContent, listItems, listItemsFiltered, status;
+const DEFAULT_STATUS = "default", FILTERING_STATUS = "filtering";
+
 init();
 
 function init() {
+    listItems = new Array();
+    listItemsFiltered = new Array();
+    tableContent = "";
+    status = DEFAULT_STATUS;
     modal = document.getElementById("addModal");
     idMaSanPham = document.getElementById("maSanPham");
     idTenSanPham = document.getElementById("tenSanPham");
@@ -85,7 +89,13 @@ function editItem(index) {
     btnClear.style.display = "none";
     btnConfirm.style.display = "none";
     editLabel("Sửa sản phẩm");
-    let editedItem = listItems[index];
+    let editedItem;
+    if (status == DEFAULT_STATUS) {
+        editedItem = listItems[index];
+
+    } else {
+        editedItem = listItemsFiltered[index];
+    }
     idMaSanPham.value = editedItem.maSanPham;
     idMaSanPham.readOnly = true;
     idTenSanPham.value = editedItem.tenSanPham;
@@ -129,11 +139,12 @@ function confirmAdd() {
             <td>${newSanPham.donGia}</td>
             <td>${newSanPham.ghiChu}</td>
             <td>
-                <a href='#' onclick="editItem(${listItems.length - 1})">Sửa</a> | <a href='#' onclick="deleteItem(${listItems.length - 1})">Xoá</a>  
+                <a href='#' onclick="editItem(${listItems.length - 1})">Sửa</a> | <a href='#' onclick="deleteItem()">Xoá</a>  
             </td>
           </tr>`
         tableContent += newItemHtml;
         table += newItemHtml;
+        updateDataTable(listItems);
         updateTableDisplay();
         closeModal();
     }
@@ -150,6 +161,7 @@ function updateDataTable(newArrayList) {
 function saveEdit() {
     newItem = getValue();
     let index;
+    //edit data listItems
     listItems.forEach((sp, i) => {
         if (sp.maSanPham == newItem.maSanPham) {
             index = i;
@@ -157,35 +169,63 @@ function saveEdit() {
         }
     });
     listItems[index] = newItem;
+
+    if (status == DEFAULT_STATUS) {
+        updateDataTable(listItems);
+    } else { //edit data listItemsFiltered
+        let indexFilter;
+        listItemsFiltered.forEach((sp, i) => {
+            if (sp.maSanPham == newItem.maSanPham) {
+                indexFilter = i;
+                return;
+            }
+        });
+        listItemsFiltered[indexFilter] = newItem;
+        updateDataTable(listItemsFiltered);
+    }
+
     saveStorage();
-    updateDataTable(listItems);
     closeModal();
 }
 
 function deleteItem(index) {
-    listItems.splice(index, 1);
+    if (status == DEFAULT_STATUS) {
+        listItems.splice(index, 1);
+        updateDataTable(listItems);
+    } else { //after filter
+        item = listItemsFiltered[index];
+        let ii;
+        listItems.forEach((sp, i) => {
+            if (sp.maSanPham == item.maSanPham) {
+                ii = i;
+                return;
+            }
+        });
+        listItems.splice(ii, 1);
+        listItemsFiltered.splice(index, 1);
+        updateDataTable(listItemsFiltered);
+    }
     saveStorage();
-    updateDataTable(listItems);
 }
 
+//search by name
 function searchItems() {
     let txtSearch = document.getElementById("searchName");
-    var listItemsFiltered = new Array();
+    listItemsFiltered = [];
     let name = txtSearch.value;
     if (name.length == 0) {
+        status = DEFAULT_STATUS;
         updateDataTable(listItems);
         return;
     }
+    status = FILTERING_STATUS;
     listItems.forEach((sp, index) => {
         if (sp.tenSanPham.toLowerCase().search(name) != -1) {
             listItemsFiltered.push(listItems[index]);
         }
     });
     txtSearch.value = name;
-
     updateDataTable(listItemsFiltered);
-    // document.getElementById("searchName").value = name;
-    console.log(txtSearch.value);
 }
 
 function getValue() {
