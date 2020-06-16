@@ -183,7 +183,6 @@ function saveEdit() {
         listItemsFiltered[indexFilter] = newItem;
         updateDataTable(listItemsFiltered);
     }
-
     saveStorage();
     closeModal();
 }

@@ -48,6 +48,7 @@ th, td {
 }
 .donGia {
   padding: 1%;
+  text-align: right;
 }
 .action {
   text-align: center;
