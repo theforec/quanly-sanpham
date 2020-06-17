@@ -126,7 +126,7 @@ function confirmAdd() {
             }
         });
         if (flag2 != 0) {
-            alert("Không được nhập trùng mã sản phẩm");
+            alert("Mã sản phẩm đã tồn tại");
             return;
         }
 
@@ -162,10 +162,9 @@ function saveEdit() {
     newItem = getValue();
     let index;
     //edit data listItems
-    listItems.forEach((sp, i) => {
+    listItems.find((sp, i) => {
         if (sp.maSanPham == newItem.maSanPham) {
             index = i;
-            return;
         }
     });
     listItems[index] = newItem;
@@ -174,10 +173,9 @@ function saveEdit() {
         updateDataTable(listItems);
     } else { //edit data listItemsFiltered
         let indexFilter;
-        listItemsFiltered.forEach((sp, i) => {
+        listItemsFiltered.find((sp, i) => {
             if (sp.maSanPham == newItem.maSanPham) {
                 indexFilter = i;
-                return;
             }
         });
         listItemsFiltered[indexFilter] = newItem;
@@ -191,23 +189,17 @@ function deleteItem(index) {
     if (status == DEFAULT_STATUS) {
         listItems.splice(index, 1);
         updateDataTable(listItems);
-    } else { //after filter
+    } else { //filtering
         item = listItemsFiltered[index];
-        let ii;
-        listItems.forEach((sp, i) => {
-            if (sp.maSanPham == item.maSanPham) {
-                ii = i;
-                return;
-            }
-        });
-        listItems.splice(ii, 1);
-        listItemsFiltered.splice(index, 1);
+        //delete item
+        listItems = listItems.filter(sp => sp.maSanPham != item.maSanPham);
+        listItemsFiltered = listItemsFiltered.filter(sp => sp.maSanPham != item.maSanPham);
         updateDataTable(listItemsFiltered);
     }
     saveStorage();
 }
 
-//search by name
+//search by everything
 function searchItems() {
     let txtSearch = document.getElementById("searchName");
     listItemsFiltered = [];
@@ -218,11 +210,10 @@ function searchItems() {
         return;
     }
     status = FILTERING_STATUS;
-    listItems.forEach((sp, index) => {
-        if (sp.tenSanPham.toLowerCase().search(name) != -1) {
-            listItemsFiltered.push(listItems[index]);
-        }
-    });
+    listItemsFiltered = listItems.filter(sp =>
+        sp.tenSanPham.toLowerCase().search(name) != -1 || sp.maSanPham.toLowerCase().search(name) != -1 ||
+        sp.donGia.toLowerCase().search(name) != -1 || sp.ghiChu.toLowerCase().search(name) != -1)
+
     txtSearch.value = name;
     updateDataTable(listItemsFiltered);
 }
@@ -234,7 +225,6 @@ function getValue() {
         donGia: idDonGia.value,
         ghiChu: idGhiChu.value,
     }
-
     return item;
 }
 
